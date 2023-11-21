@@ -12,6 +12,7 @@ canvas.height = 576
         // to the bottom right corner of the canvas
 context.fillRect(0, 0, canvas.width, canvas.height)
 
+// By specifying a gravity, I ensure that the characters are brought down to the bottom of the page at a specific rate
 const gravity = 0.7
 
 // Create a sprite class that will be used to define numerous characters throughout the game
@@ -22,6 +23,7 @@ class Sprite {
         this.speed = speed
         // Create a static height for the characters
         this.height = 150
+        // By setting lastKey as a parameter to be passed in, I can determine which key was the last one pressed for movement
         this.lastKey
     }
 
@@ -56,7 +58,7 @@ class Sprite {
     }
 }
 
-// Create first player Sprite with a position in the top left corner of the screen and a falling speed of 10px
+// Create first player Sprite with a position in the top left corner of the screen and an initial falling speed of 10px
 const player = new Sprite({
     position: {
         x: 0,
@@ -80,6 +82,8 @@ const enemy = new Sprite({
     }
 })
 
+// Declare an object of keys to store each key binding for the player and enemy and whether or not it is being pressed by 
+// setting each of them to false initially
 const keys = {
     a: {
         pressed: false
@@ -104,9 +108,13 @@ function movement() {
     player.update()
     enemy.update()
 
+    // By setting the player and enemy speed.x to 0, the characters will stop all movement forward and backward when the key is no longer
+    // being pressed
     player.speed.x = 0
     enemy.speed.x = 0
 
+    // Set two if...else statements for both the player and enemy to determine if the keys are being pressed as well as if it is the 
+    // lastKey pressed. If so, make the characters move either left or right at a specified speed
     if(keys.a.pressed && player.lastKey === 'a') {
         player.speed.x = -5
     } else if(keys.d.pressed && player.lastKey === 'd') {
@@ -123,6 +131,10 @@ function movement() {
 // Call on the movement function to initiate the loop
 movement()
 
+// Use a switch...case statment to store several objectives based on a singular event being e.key
+    // the case should specify the key being pressed, set the keys.key.pressed to true, specify the lastKey
+    // and then break to ensure the loop ends
+        // Do a new case for each key including the enemy.
 window.addEventListener('keydown', (e) => {
     switch (e.key) {
         case 'd':
@@ -151,6 +163,7 @@ window.addEventListener('keydown', (e) => {
     }
 })
 
+// Create a keyup eventlistener that will set the keys.key.pressed to false and then break to stop all movement
 window.addEventListener('keyup', (e) => {
     switch (e.key) {
         case 'd':
@@ -159,18 +172,12 @@ window.addEventListener('keyup', (e) => {
         case 'a':
             keys.a.pressed = false
             break
-        case 'w':
-            player.speed.x = 0
-            break
 
         case 'ArrowRight':
             keys.ArrowRight.pressed = false
             break
         case 'ArrowLeft':
             keys.ArrowLeft.pressed = false
-            break
-        case 'ArrowUp':
-            player.speed.x = 0
             break
     }
 })
