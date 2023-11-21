@@ -1,0 +1,26 @@
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: darkgrey;
+    padding: 0;
+    margin: 0;
+}
+
+.heading {
+    display: flex;
+    font-size: 40px;
+    font-family: 'Avengeance';
+    src: url('Avengeance-YolO.ttf');
+    text-shadow: red 2px 1px 0;
+}
+
+img {
+    width: 150px;
+}
+
+canvas {
+    border: 10px solid rgb(192, 0, 0);
+}
