@@ -12,7 +12,7 @@ canvas.height = 576
         // to the bottom right corner of the canvas
 context.fillRect(0, 0, canvas.width, canvas.height)
 
-const gravity = 0.2
+const gravity = 0.7
 
 // Create a sprite class that will be used to define numerous characters throughout the game
 class Sprite {
@@ -22,6 +22,7 @@ class Sprite {
         this.speed = speed
         // Create a static height for the characters
         this.height = 150
+        this.lastKey
     }
 
     // Create a draw method that will draw out each sprite when called on in the game
@@ -39,6 +40,7 @@ class Sprite {
         // Calling on the this.drawSprite() draws out the defined sprite at its new position
         this.drawSprite()
 
+        this.position.x += this.speed.x
         // This will update the falling speed of the sprite by increasing the y-position by a factor of y-speed
         this.position.y += this.speed.y
 
@@ -78,6 +80,21 @@ const enemy = new Sprite({
     }
 })
 
+const keys = {
+    a: {
+        pressed: false
+    },
+    d: {
+        pressed: false
+    },
+    ArrowLeft: {
+        pressed: false
+    },
+    ArrowRight: {
+        pressed: false
+    }
+}
+
 // Create an infinite loop function called movement that updates the characters new position while also clearing the character from
 // its past position by refilling that location with a 'black' fill to match the canvas
 function movement() {
@@ -86,6 +103,74 @@ function movement() {
     context.fillRect(0, 0, canvas.width, canvas.height)
     player.update()
     enemy.update()
+
+    player.speed.x = 0
+    enemy.speed.x = 0
+
+    if(keys.a.pressed && player.lastKey === 'a') {
+        player.speed.x = -5
+    } else if(keys.d.pressed && player.lastKey === 'd') {
+        player.speed.x = 5
+    }
+
+    if(keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
+        enemy.speed.x = -5
+    } else if(keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
+        enemy.speed.x = 5
+    }
 }
+
 // Call on the movement function to initiate the loop
 movement()
+
+window.addEventListener('keydown', (e) => {
+    switch (e.key) {
+        case 'd':
+            keys.d.pressed = true
+            player.lastKey = 'd'
+            break
+        case 'a':
+            keys.a.pressed = true
+            player.lastKey = 'a'
+            break
+        case 'w':
+            player.speed.y = -20
+            break
+
+        case 'ArrowRight':
+            keys.ArrowRight.pressed = true
+            enemy.lastKey = 'ArrowRight'
+            break
+        case 'ArrowLeft':
+            keys.ArrowLeft.pressed = true
+            enemy.lastKey = 'ArrowLeft'
+            break
+        case 'ArrowUp':
+            enemy.speed.y = -20
+            break
+    }
+})
+
+window.addEventListener('keyup', (e) => {
+    switch (e.key) {
+        case 'd':
+            keys.d.pressed = false
+            break
+        case 'a':
+            keys.a.pressed = false
+            break
+        case 'w':
+            player.speed.x = 0
+            break
+
+        case 'ArrowRight':
+            keys.ArrowRight.pressed = false
+            break
+        case 'ArrowLeft':
+            keys.ArrowLeft.pressed = false
+            break
+        case 'ArrowUp':
+            player.speed.x = 0
+            break
+    }
+})
